@@ -47,47 +47,18 @@ def read_sentences(path, preferred_column):
 
 # df = pd.read_csv("dataset.csv") # a donner
 
-df = pd.read_csv(
-    "ffr_dataset_v2.txt",
-    sep="\t",
-    header=None,
-    names=["fr", "en"],
-    encoding="utf-8",
-    on_bad_lines="warn"
-)
+train_df = pd.read_csv("train.csv")
+val_df = pd.read_csv("val.csv")
+# test_df = pd.read_csv("test.csv")
 
-fr_sentences = df["fr"].fillna("").astype(str).tolist()
-en_sentences = df["en"].fillna("").astype(str).tolist()
-
-
-
-if len(fr_sentences) != len(en_sentences):
-    raise ValueError(
-        "Les fichiers FR et EN doivent contenir "
-        "le même nombre de lignes alignées."
-    )
-
-# Supprimer les paires vides
-pairs = [
-    (fr.strip(), en.strip())
-    for fr, en in zip(fr_sentences, en_sentences)
-    if fr.strip() and en.strip()
-]
-
-random.shuffle(pairs)
-
-# Répartition entraînement / validation / test
-n = len(pairs)
-n_train = int(0.8 * n)
-n_val = int(0.1 * n)
-
-train_pairs = pairs[:n_train]
-val_pairs = pairs[n_train:n_train + n_val]
-test_pairs = pairs[n_train + n_val:]
+train_pairs = list(zip(train_df["fr"], train_df["en"]))
+val_pairs = list(zip(val_df["fr"], val_df["en"]))
+# test_pairs = list(zip(test_df["fr"], test_df["en"]))
 
 print(f"Entraînement : {len(train_pairs)}")
 print(f"Validation   : {len(val_pairs)}")
-print(f"Test         : {len(test_pairs)}")
+# print(f"Test         : {len(test_pairs)}")
+
 
 
 # =====================================================
